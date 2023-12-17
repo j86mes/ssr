@@ -133,18 +133,18 @@ this.pipeline.addPipe(new ec),this.pipeline.addPipe(new el("#1e2640")),this.pipe
 this.pipeline.addPipe(new ex),this.pipeline.addPipe(new ef),this.pipeline.addPipe(new eb),this.pipeline.addPipe(new eu),this.pipeline.addPipe(new eO),this.pipeline.addPipe(new eH),this.pipeline.addPipe(new eX),this.pipeline.addPipe(new ej(this.audioController)),this.pipeline.addPipe(new eS),//launch the game loop
 this.runner=new H.VariableStepRunner(this.step,1/90);//this.runnerStopCallback = fixedStepRunner(this.step, 1000/100);
 //const runnerStopCallback = manualStepRunner(step, 20);
-}}class ek{constructor(){this.paused=!0,this.hasHadFirstHover=!1,this.src=`${j}sleigh-ride-80.mp3`,this.loadAudioSourceAndPlay=()=>{fetch(this.src,{mode:"cors"}).then(e=>e.arrayBuffer().then(e=>{this.audioCtx.decodeAudioData(e).then(e=>{this.audioData=e,this.play()})}));//let buffer = await audioSrc.arrayBuffer();
+}}class ek{constructor(){this.paused=!0,this.hasHadFirstPlay=!1,this.src=`${j}sleigh-ride-80.mp3`,this.loadAudioSourceAndPlay=()=>{fetch(this.src,{mode:"cors"}).then(e=>e.arrayBuffer().then(e=>{this.audioCtx.decodeAudioData(e).then(e=>{this.audioData=e,this.play()})}));//let buffer = await audioSrc.arrayBuffer();
 //this.audioData = await this.audioCtx?.decodeAudioData(buffer);
 //this.play();
 },this.loadAudioSource=()=>{// Load some audio (CORS need to be allowed or we won't be able to decode the data)
 fetch(this.src,{mode:"cors"}).then(function(e){return e.arrayBuffer()}).then(this.decode)},// Decode the audio file, then start the show
 this.decode=e=>{this.audioCtx.decodeAudioData(e,this.prepareForPlay)},this.prepareForPlay=e=>{this.audioData=e;// create a reference for control buttons
 },// Sets up a new source node as needed as stopping will render current invalid
-this.play=()=>{this.audioData&&(this.srcNode=this.audioCtx.createBufferSource(),this.srcNode.buffer=this.audioData,this.srcNode.connect(this.audioCtx.destination),this.srcNode.loop=!0,this.srcNode.start(),this.paused=!1)},this.pause=()=>{this.srcNode.stop(),this.srcNode=null,this.paused=!0},this.hovered=()=>{// update button style on hover?
+this.play=()=>{this.audioData&&(this.srcNode=this.audioCtx.createBufferSource(),this.srcNode.buffer=this.audioData,this.srcNode.connect(this.audioCtx.destination),this.srcNode.loop=!0,this.srcNode.start(),this.paused=!1,this.hasHadFirstPlay=!0)},this.pause=()=>{this.srcNode.stop(),this.srcNode=null,this.paused=!0},this.hovered=()=>{// update button style on hover?
 /*if(!this.hasHadFirstHover){
 			this.music.play();
 			this.hasHadFirstHover = true;
-		}*/},this.frameTouched=()=>{this.hasHadFirstHover||(this.hasHadFirstHover=!0,this.loadAudioSourceAndPlay())},this.toggle=()=>{this.paused?this.play():this.pause()},this.getButton=()=>this.paused?this.mutedButton:this.playingButton,this.dispose=()=>{this.srcNode?.stop(),this.srcNode=null,this.audioCtx=null,this.audioData=null},//this.music = new Audio(`${AUDIO_PATH}sleigh-ride-80.mp3`);
+		}*/},this.frameTouched=()=>{this.hasHadFirstPlay||this.loadAudioSourceAndPlay()},this.toggle=()=>{this.paused?this.play():this.pause()},this.getButton=()=>this.paused?this.mutedButton:this.playingButton,this.dispose=()=>{this.srcNode?.stop(),this.srcNode=null,this.audioCtx=null,this.audioData=null},//this.music = new Audio(`${AUDIO_PATH}sleigh-ride-80.mp3`);
 //this.music.loop = true;
 //this.music.pause();
 this.mutedButton=new Image,this.mutedButton.src=`${X}musicoff.png`,this.playingButton=new Image,this.playingButton.src=`${X}musicon.png`,this.audioCtx=new(AudioContext||webkitAudioContext),this.src=`${j}sleigh-ride-80.mp3`;//this.loadAudioSource();
