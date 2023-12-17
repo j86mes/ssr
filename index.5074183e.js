@@ -122,7 +122,7 @@ this.resizeCallback(),this.gameState.camera?.setCanvasSize(this.canvasContext),t
 //console.log("Step "+this.stepC+" took " + (t1 - t0) + " milliseconds.");
 },this.bindUICaptureListener=()=>{this.canvasContext.canvas.addEventListener("pointerdown",this.userClicked,{passive:!0}),this.canvasContext.canvas.addEventListener("pointerenter",this.userHovered,{passive:!0}),this.canvasContext.canvas.addEventListener("pointermove",this.userHovered,{passive:!0});//document.body.addEventListener('mousedown', this.userClicked, true); 
 //document.body.addEventListener('touchstart', this.userClicked, true); 
-},this.userClicked=async e=>{let t=e.offsetX,i=e.offsetY;this.touchListener.touchesInStep+=1,this.touchListener.touches.push({renderX:t,renderY:i}),await this.audioController.frameTouched()},this.userHovered=e=>{let t=e.offsetX,i=e.offsetY;this.touchListener.hovers.push({renderX:t,renderY:i})},this.dispose=()=>{this.canvasContext.canvas.removeEventListener("pointerdown",this.userClicked),this.canvasContext.canvas.removeEventListener("pointerenter",this.userHovered),this.canvasContext.canvas.removeEventListener("pointermove",this.userHovered)},this.canvasContext=e,this.resizeCallback=t,this.audioController=i,this.pipeline=new a.Pipeline.Pipeline(this.canvasContext),this.gameState=ee(),this.setup()}setup(){this.bindUICaptureListener(),et(this.gameState,this.canvasContext),// add input pipes
+},this.userClicked=e=>{this.audioController.frameTouched();let t=e.offsetX,i=e.offsetY;this.touchListener.touchesInStep+=1,this.touchListener.touches.push({renderX:t,renderY:i})},this.userHovered=e=>{let t=e.offsetX,i=e.offsetY;this.touchListener.hovers.push({renderX:t,renderY:i})},this.dispose=()=>{this.canvasContext.canvas.removeEventListener("pointerdown",this.userClicked),this.canvasContext.canvas.removeEventListener("pointerenter",this.userHovered),this.canvasContext.canvas.removeEventListener("pointermove",this.userHovered)},this.canvasContext=e,this.resizeCallback=t,this.audioController=i,this.pipeline=new a.Pipeline.Pipeline(this.canvasContext),this.gameState=ee(),this.setup()}setup(){this.bindUICaptureListener(),et(this.gameState,this.canvasContext),// add input pipes
 //this.pipeline.addPipe(new DebugFlag());
 this.pipeline.addPipe(new eF(this.touchListener,this.audioController)),// add physics pipes
 this.pipeline.addPipe(new es),this.pipeline.addPipe(new er),this.pipeline.addPipe(new en),this.pipeline.addPipe(new eD),this.pipeline.addPipe(new ed),this.pipeline.addPipe(new ea),this.pipeline.addPipe(new eA),this.pipeline.addPipe(new ei),this.pipeline.addPipe(new eh),// add render pipes
@@ -133,7 +133,10 @@ this.pipeline.addPipe(new ec),this.pipeline.addPipe(new el("#1e2640")),this.pipe
 this.pipeline.addPipe(new ex),this.pipeline.addPipe(new ef),this.pipeline.addPipe(new eb),this.pipeline.addPipe(new eu),this.pipeline.addPipe(new eO),this.pipeline.addPipe(new eH),this.pipeline.addPipe(new eX),this.pipeline.addPipe(new ej(this.audioController)),this.pipeline.addPipe(new eS),//launch the game loop
 this.runner=new H.VariableStepRunner(this.step,1/90);//this.runnerStopCallback = fixedStepRunner(this.step, 1000/100);
 //const runnerStopCallback = manualStepRunner(step, 20);
-}}class ek{constructor(){this.paused=!0,this.hasHadFirstHover=!1,this.src=`${j}sleigh-ride-80.mp3`,this.loadAudioSourceAndPlayAsync=async()=>{let e=await fetch(this.src,{mode:"cors"}),t=await e.arrayBuffer();this.audioData=await this.audioCtx?.decodeAudioData(t),this.play()},this.loadAudioSource=()=>{// Load some audio (CORS need to be allowed or we won't be able to decode the data)
+}}class ek{constructor(){this.paused=!0,this.hasHadFirstHover=!1,this.src=`${j}sleigh-ride-80.mp3`,this.loadAudioSourceAndPlay=()=>{fetch(this.src,{mode:"cors"}).then(e=>e.arrayBuffer().then(e=>{this.audioCtx.decodeAudioData(e).then(e=>{this.audioData=e,this.play()})}));//let buffer = await audioSrc.arrayBuffer();
+//this.audioData = await this.audioCtx?.decodeAudioData(buffer);
+//this.play();
+},this.loadAudioSource=()=>{// Load some audio (CORS need to be allowed or we won't be able to decode the data)
 fetch(this.src,{mode:"cors"}).then(function(e){return e.arrayBuffer()}).then(this.decode)},// Decode the audio file, then start the show
 this.decode=e=>{this.audioCtx.decodeAudioData(e,this.prepareForPlay)},this.prepareForPlay=e=>{this.audioData=e;// create a reference for control buttons
 },// Sets up a new source node as needed as stopping will render current invalid
@@ -141,7 +144,7 @@ this.play=()=>{this.audioData&&(this.srcNode=this.audioCtx.createBufferSource(),
 /*if(!this.hasHadFirstHover){
 			this.music.play();
 			this.hasHadFirstHover = true;
-		}*/},this.frameTouched=async()=>{this.hasHadFirstHover||(this.hasHadFirstHover=!0,await this.loadAudioSourceAndPlayAsync())},this.toggle=()=>{this.paused?this.play():this.pause()},this.getButton=()=>this.paused?this.mutedButton:this.playingButton,this.dispose=()=>{this.srcNode?.stop(),this.srcNode=null,this.audioCtx=null,this.audioData=null},//this.music = new Audio(`${AUDIO_PATH}sleigh-ride-80.mp3`);
+		}*/},this.frameTouched=()=>{this.hasHadFirstHover||(this.hasHadFirstHover=!0,this.loadAudioSourceAndPlay())},this.toggle=()=>{this.paused?this.play():this.pause()},this.getButton=()=>this.paused?this.mutedButton:this.playingButton,this.dispose=()=>{this.srcNode?.stop(),this.srcNode=null,this.audioCtx=null,this.audioData=null},//this.music = new Audio(`${AUDIO_PATH}sleigh-ride-80.mp3`);
 //this.music.loop = true;
 //this.music.pause();
 this.mutedButton=new Image,this.mutedButton.src=`${X}musicoff.png`,this.playingButton=new Image,this.playingButton.src=`${X}musicon.png`,this.audioCtx=new(AudioContext||webkitAudioContext),this.src=`${j}sleigh-ride-80.mp3`;//this.loadAudioSource();
